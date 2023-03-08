@@ -1,22 +1,12 @@
 const express = require('express');
 const router = express.Router();
-
-// Authentication routes
-
-// import bcrypt
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const { check, validationResult } = require('express-validator');
-
+const { check } = require('express-validator');
 
 // Import the User model
 const User = require('../../models/users');
 
-// Import the authentication middleware
-const credentialChecker = require('../../utils/credentialChecker');
-
-// import the routes 
+// import the controllers
 const  registerController  = require('../../controllers/authController');
 const { register, logIn, logOut, changePassword, resetPassword } = registerController;
 

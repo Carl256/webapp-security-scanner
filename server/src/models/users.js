@@ -24,12 +24,10 @@ userSchema.pre('save', async function (next) {
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-
-  console.log('password', this.password);
   next();
 });
 
-userSchema.methods.comparePassword = async function (candidatePassword) {
+userSchema.methods.compare = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 const User = mongoose.model('user', userSchema);

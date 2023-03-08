@@ -1,4 +1,4 @@
-// 
+//
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
@@ -29,14 +29,16 @@ const register = async function (req, res) {
     const existingUser = await User.findOne({
       email: email,
       password: password,
-    }).then((user) => { user });
+    }).then((user) => {
+      user;
+    });
 
     if (existingUser) {
       return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }
     // Hash the password using bcrypt
-    const salt = await bcrypt.genSaltSync(10);
-    const hashedPassword = await bcrypt.hashSync(password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create a new user
     const user = new User({ email, password: hashedPassword });
@@ -47,7 +49,7 @@ const register = async function (req, res) {
     res.json({ token });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ errors: [{ msg: "Server error is real" }] });
+    res.status(500).json({ errors: [{ msg: "Server error is" }] });
   }
 };
 
@@ -58,37 +60,40 @@ const logIn = async function (req, res) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  // Extract the email and password from the request body
-  const { email, password } = req.body;
-
-  //create a new user object
-  const newUser = new User({
-    email,
-    password,
-  });
-
   try {
-    const { email, password } = newUser;
+    // Extract the email and password from the request body
+    const { email } = req.body;
+
     // Check if the user exists
-    const user = await User.findOne({ email: email }, { __v: 0 }).select(
-      "+password, +email"
-    );
+    const user = await User.findOne({ email: email }).then((user) => {
+      // if the user email is found, return the user object
+      return user;
+    });
 
     if (!user) {
       return res.status(401).json({ errors: [{ msg: "Invalid credentials" }] });
     }
 
-    // Check if the password is correct
-    const isMatch = await bcrypt.compareSync(password, user.password);
 
+    const isMatch = await bcrypt.genSalt(10).then((salt) => {
+      // get password from user object
+      const { password } = user;
+      return bcrypt.hash(password, salt).then((hashedPassword) => {
+        return bcrypt.compare(password, hashedPassword);
+      });
+    });
 
     if (!isMatch) {
-      return res.status(401).json({ errors: [{ msg: "Invalid credentials" }] });
+      return res.status(401).json({ errors: [{ msg: "Invalid password" }] });
     }
 
-    // Return a JWT token for the authenticated user
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-    res.json({ token });
+    if ( isMatch ) {
+      // Return a JWT token for the authenticated user
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+      res.json({ token });
+
+      return res.status(200).json({ message: "Logged in successfully" });
+    }
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ errors: [{ msg: "Server error" }] });
