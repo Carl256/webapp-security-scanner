@@ -17,42 +17,42 @@ Routes
 
 #Authentication Routes
 
-<strong>/register</strong>
+<strong>/register</strong><br />
 This route allows users to create a new account by providing their email, password, and name.
 
-<strong>/login</strong>
+<strong>/login</strong><br />
 This route allows users to log in by providing their email and password. A JWT token is returned upon successful login.
 
-<strong>/forgot-password</strong>
+<strong>/forgot-password</strong><br />
 This route allows users to request a password reset by providing their email. A password reset link is sent to the user's email.
 
-<strong>/reset-password</strong>
+<strong>/reset-password</strong><br />
 This route allows users to reset their password by providing their email, new password, and a password reset token received in their email.
 
 # Security Routes
 
-<strong>/scan</strong>
+<strong>/scan</strong><br />
 This route performs a security scan on a specified URL using OWASP ZAP and returns the scan results.
 
 
-<strong>/threat-intelligence</strong>
+<strong>/threat-intelligence</strong><br />
 This route provides threat intelligence information for a specified IP address or domain.
 
 
-<strong>/firewall-management</strong>
+<strong>/firewall-management</strong><br />
 This route allows users to manage their firewall rules by adding, editing, and deleting rules.
 
 #
 
 # Monitoring Routes
 
-<strong>/log-monitoring</strong>
+<strong>/log-monitoring</strong><br />
 This route allows users to view and filter their server logs.
 
 #
 
 # Incident Response Routes
-<strong>/incident-response</strong>
+<strong>/incident-response</strong><br />
 This route provides guidance and support for users who have experienced a cybersecurity incident, such as a data breach or malware attack.
 #
 Authentication and Authorization
